@@ -71,7 +71,7 @@ public class TodoControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(todoController).build();
     }
 
-    public static final String invalidTodoJson = "{\"name\": \"Learn Fundamentals of Java\",\"completed\": true}";
+    public static final String invalidTodoJson = "{\"completed\": true}";
 
 
     @Test
