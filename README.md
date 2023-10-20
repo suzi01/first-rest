@@ -1,8 +1,8 @@
 Following with instuctions below but with Java and Spring boot
 
-# Node.js Assessment: Todo List API
+# Java Springboot: Todo List API
 
-For your unit 5 assessment you are required to create a RESTful API  using [Node.js](https://nodejs.org/en/) and [Express.js](https://expressjs.com/).
+ Create a RESTful API  using Springboot.
 
 The API should create `(POST)`, read `(GET)`, update `(PUT or PATCH)` and delete `(DELETE)` from a list of todos. The [todos.json](src/models/todos.json) file is used as the server's data store and can be found in the `models` folder.
 
@@ -49,56 +49,8 @@ Ensure your finished repository meets all of the [Assessment Criteria](#assessme
   }
 ```
 
-## Setup and Configuration
 
-1. Clone this repository to your local machine. Once cloned, open in Visual Code.
 
-2. Create a file called `.env` in your home directory (outside of the `src` folder). Add the following text:
-
-```
-BASE_JSON_PATH="/models/todos.json"
-```
-
-This will ensure the current starter code is using the `todos.json` in the `models` folder.
-
-In your code when saving the updated list of todos back to the `todos.json` file, use the following environment variable:
-
-```javascript
-process.env.BASE_JSON_PATH
-```
-e.g.
-```javascript
-fs.writeFile(__dirname + process.env.BASE_JSON_PATH,  content, err => {
-    if (err) {
-      console.error(err)
-      return
-    }
-}
-```
-
-3. Run the following commands to install any dependencies:
-
-```
-npm install
-```
-
-4. In the `index.js` file you will find some initial code. Read through, understand and uncomment the code to implement a basic static server with two endpoints.
-
-1. Once you have completed the steps above. You can start the API with the following command:
-
-```
-npm start
-```
-
-6. If configured correctly, when you visit the local URL: `http://localhost:8080/`, you will see the following page:
-
-![index.html API Homepage](node-assessment.png "Title")
-
-7. To complete the assessment make additions to the `index.js` file to return the expected data. Review the assessment criteria for detailed information on expected endpoints for your completed API.
-
-## How to submit
-
-Commit all files and folders to the repo and push to your remote repo for assessment.
 
 
 
