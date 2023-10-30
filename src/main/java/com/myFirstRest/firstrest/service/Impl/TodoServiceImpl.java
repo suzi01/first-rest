@@ -40,13 +40,25 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public TodoDTO saveTodo(TodoDTO todoDTO) {
-        try {
+//        try {
             TodoEntity todoEntity  = todoConverter.convertyDTOToEntity(todoDTO);
             todoEntity = todoRepository.save(todoEntity);
             todoDTO = todoConverter.convertyEntityToDTO(todoEntity);
-        } catch (Exception ex){
-            throw new TodoBadRequest("Todo type is incorrect, please make sure it has the correct attributes");
-        }
+//        } catch (Exception ex){
+////            throw new TodoBadRequest("Todo type is incorrect, please make sure it has the correct attributes");
+//        }
+//        return todoDTO;
+
+//        Optional<TodoEntity> optionalTodoEntity = Optional.ofNullable(todoConverter.convertyDTOToEntity(todoDTO));
+//        TodoDTO todoDto;
+//        if(optionalTodoEntity.isPresent()){
+//            TodoEntity todoEntity = optionalTodoEntity.get();
+//            todoEntity = todoRepository.save(todoEntity);
+//            todoDto = todoConverter.convertyEntityToDTO(todoEntity);
+//        }
+//        else {
+//            throw new TodoBadRequest("Todo type is incorrect, please make sure it has the correct attributes");
+//        }
         return todoDTO;
     }
 
@@ -151,7 +163,7 @@ public class TodoServiceImpl implements TodoService {
             updatedDto = todoConverter.convertyEntityToDTO(te);
             todoRepository.save(te);
         } else {
-            throw new TodoNotFoundException("Todo with ID " + todoID + " not found");
+            throw new TodoNotFoundException("Todo with ID " + todoID + " does not exist");
         }
         return updatedDto;
     }

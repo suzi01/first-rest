@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,8 +25,7 @@ public class TodoController {
     @GetMapping("/todos")
     public ResponseEntity<List<TodoDTO>> getAllTodos(){
         List<TodoDTO> todoDTOList = todoService.getAllTodos();
-        ResponseEntity<List<TodoDTO>> responseEntity = new ResponseEntity<>(todoDTOList, HttpStatus.OK);
-        return responseEntity;
+        return new ResponseEntity<>(todoDTOList, HttpStatus.OK);
     }
 
 
@@ -33,8 +33,7 @@ public class TodoController {
     @GetMapping("/todos/{todoId}")
     public  ResponseEntity<TodoDTO> getTodo(@PathVariable("todoId") UUID todoId){
         TodoDTO todoEntity = todoService.getTodoById(todoId);
-        ResponseEntity<TodoDTO> responseEntity = new ResponseEntity<>(todoEntity, HttpStatus.OK);
-        return responseEntity;
+        return new ResponseEntity<>( todoEntity, HttpStatus.OK);
     }
 
     //    Return a list of overdue todos or an empty list if there are no overdue todos.
@@ -42,8 +41,7 @@ public class TodoController {
     @GetMapping("/todos/overdue")
     public ResponseEntity<List<TodoDTO>> getAllOverdueTodos(){
         List<TodoDTO> todoDTOList = todoService.getOverdueTodos();
-        ResponseEntity<List<TodoDTO>> responseEntity = new ResponseEntity<>(todoDTOList, HttpStatus.OK);
-        return responseEntity;
+        return new ResponseEntity<>(todoDTOList, HttpStatus.OK);
     }
 
 
@@ -57,15 +55,14 @@ public class TodoController {
 
     //    Add a new todo to the todo list
     @PostMapping("/todos")
-    public ResponseEntity<TodoDTO> addTodo(@RequestBody TodoDTO todoDTO){
+    public ResponseEntity<TodoDTO> addTodo(@Valid @RequestBody TodoDTO todoDTO){
         todoDTO = todoService.saveTodo(todoDTO);
-        ResponseEntity<TodoDTO> responseEntity = new ResponseEntity<>(todoDTO, HttpStatus.CREATED);
-        return responseEntity;
+        return new ResponseEntity<>(todoDTO, HttpStatus.CREATED);
     }
 
     //    Edit the name and/or due date attributes of a todo.
     @PatchMapping("/todos/{todoId}")
-    public ResponseEntity<TodoDTO> editTodo(@PathVariable("todoId") UUID todoId, @RequestBody PartialTodoDTO todoDTO){
+    public ResponseEntity<TodoDTO> editTodo(@PathVariable("todoId") UUID todoId, @Valid @RequestBody PartialTodoDTO todoDTO){
         TodoDTO updatedTodo = todoService.updateDTO(todoId, todoDTO);
         return new ResponseEntity<>(updatedTodo, HttpStatus.OK);
 

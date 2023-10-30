@@ -1,7 +1,7 @@
 package com.myFirstRest.firstrest.Model;
 
 
-import com.sun.istack.NotNull;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,9 +16,9 @@ import java.util.UUID;
 @NoArgsConstructor
 public class TodoDTO {
     private UUID id;
-    @NotNull
+    @NotNull (message = "The name is required.")
     private String name;
-    @NotNull
+    @NotNull (message = "The created date is required.")
     private LocalDateTime created;
     private LocalDateTime due;
     private boolean completed;

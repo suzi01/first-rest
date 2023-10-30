@@ -61,6 +61,7 @@ public class TodoControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+
     @MockBean
     private TodoService todoService;
 
@@ -72,6 +73,8 @@ public class TodoControllerTest {
     }
 
     public static final String invalidTodoJson = "{\"completed\": true}";
+    public static final String partialTodoJson = "{\"name\":\"Renew Passport Again\", \"due\":\"2028-02-20T18:25:43.511\"}";
+
 
 
     @Test
@@ -87,7 +90,7 @@ public class TodoControllerTest {
                 false);
         when(todoService.getTodoById(todoId)).thenReturn(expectedTodoDTO);
 
-        MockHttpServletResponse response = mockMvc.perform(get("/todos/" + todoId))
+        mockMvc.perform(get("/todos/" + todoId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(todoId.toString()))
                 .andExpect(jsonPath("$.name").value("Learn Fundamentals of Java"))
@@ -112,8 +115,7 @@ public class TodoControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/todos/" )
                         .content(invalidTodoJson)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().string("Todo type is incorrect, please make sure it has the correct attributes"));
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
@@ -134,28 +136,45 @@ public class TodoControllerTest {
                 .andExpect(content().string("Todo with ID " + nonExistentTodoId + " not found"));
     }
 
+
+    @Test //need to change
+    public void testTodoIdDoesExistForPatchRequest() throws Exception {
+        UUID partialTodoId = UUID.randomUUID();
+        LocalDateTime futureDate = LocalDateTime.of(2024, 9, 14, 0, 0);
+        PartialTodoDTO partialTodoDTO = new PartialTodoDTO(
+            "Learn Fundamentals of Java",
+            futureDate);
+        mockMvc.perform(patch("/todos/" + partialTodoId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(partialTodoJson))
+            .andExpect(status().isOk());
+    }
+
     @Test //need to change
     public void testTodoIdDoesNotExistForPatchRequest() throws Exception {
         UUID partialTodoId = UUID.randomUUID();
-        LocalDateTime currentDateTime = LocalDateTime.of(2023, 7, 14, 0, 0);
         LocalDateTime futureDate = LocalDateTime.of(2024, 9, 14, 0, 0);
         PartialTodoDTO partialTodoDTO = new PartialTodoDTO(
                 "Learn Fundamentals of Java",
-                currentDateTime);
+                futureDate);
         when(todoService.updateDTO(partialTodoId, partialTodoDTO)).thenThrow(new TodoNotFoundException("Todo with ID " + partialTodoId + " not found"));
-        mockMvc.perform(patch("/todos/" + partialTodoId).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(patch("/todos/" + partialTodoId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(partialTodoJson))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Todo with ID " + partialTodoId + " not found"));
     }
 
-//    @Test
-//    public void testTodoIdDoesNotExistForDeleteRequest() throws Exception {
-//        UUID nonExistentTodoId = UUID.randomUUID();
-//        when(todoService.deleteTodo(nonExistentTodoId)).thenThrow(new TodoNotFoundException("Todo with ID " + nonExistentTodoId + " not found"));
-//        mockMvc.perform(delete("/todos/" +nonExistentTodoId).contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isNotFound())
-//                .andExpect(content().string("Todo with ID " + nonExistentTodoId + " does not exist"));
-//    }
+
+    @Test
+    public void testTodoIdDoesNotExistForDeleteRequest() throws Exception {
+        UUID nonExistentTodoId = UUID.randomUUID();
+        doThrow(new TodoNotFoundException("Todo with ID " + nonExistentTodoId + " does not exist") )
+            .when(todoService).deleteTodo(nonExistentTodoId);
+        mockMvc.perform(delete("/todos/" +nonExistentTodoId).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Todo with ID " + nonExistentTodoId + " does not exist"));
+    }
 
 
 
