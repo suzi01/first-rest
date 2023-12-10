@@ -140,10 +140,18 @@ public class TodoControllerTest {
     @Test //need to change
     public void testTodoIdDoesExistForPatchRequest() throws Exception {
         UUID partialTodoId = UUID.randomUUID();
+        LocalDateTime currentDateTime = LocalDateTime.of(2023, 7, 14, 0, 0);
         LocalDateTime futureDate = LocalDateTime.of(2024, 9, 14, 0, 0);
         PartialTodoDTO partialTodoDTO = new PartialTodoDTO(
             "Learn Fundamentals of Java",
             futureDate);
+        TodoDTO expectedTodoDTO = new TodoDTO(
+            partialTodoId,
+            "Learn Fundamentals of Java",
+            currentDateTime,
+            futureDate,
+            false);
+        when(todoService.updateDTO(any(UUID.class), any(PartialTodoDTO.class))).thenReturn(expectedTodoDTO);
         mockMvc.perform(patch("/todos/" + partialTodoId)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(partialTodoJson))
@@ -157,7 +165,7 @@ public class TodoControllerTest {
         PartialTodoDTO partialTodoDTO = new PartialTodoDTO(
                 "Learn Fundamentals of Java",
                 futureDate);
-        when(todoService.updateDTO(partialTodoId, partialTodoDTO)).thenThrow(new TodoNotFoundException("Todo with ID " + partialTodoId + " not found"));
+        when(todoService.updateDTO(any(UUID.class), any(PartialTodoDTO.class))).thenThrow(new TodoNotFoundException("Todo with ID " + partialTodoId + " not found"));
         mockMvc.perform(patch("/todos/" + partialTodoId)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(partialTodoJson))
